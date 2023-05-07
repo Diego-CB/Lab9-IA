@@ -8,7 +8,7 @@ env = gym.make("ALE/Boxing-v5", render_mode='human')
 observation, info = env.reset()
 
 score = 0
-goal = 10
+goal = 3
 observation, info = env.reset(seed=42)
 for _ in range(1000):
     action = env.action_space.sample()
@@ -22,7 +22,7 @@ for _ in range(1000):
     if terminated or truncated:
         observation, info = env.reset()
 
-    if score > 9:
+    if score >= goal:
         print(f'Tu jugador ha acertado {goal} golpes')
         break
 env.close()
