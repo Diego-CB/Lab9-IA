@@ -1,4 +1,4 @@
-import gym
+import gymnasium as gym
 import numpy as np
 
 env = gym.make("ALE/Boxing-v5", render_mode='human')
@@ -14,18 +14,21 @@ exploration_decay_rate = 0.001
 
 # Q-Table Parameters
 n_states = (210, 160, 3)
+x_states = 160
+y_states = 210
 n_actions = env.action_space.n
-q_table = np.zeros((n_states, n_actions))
+q_table = np.zeros((x_states * y_states, n_actions))
 
 # Training Parameters
 total_episodes = 10000
-max_steps_per_episode = 1000
+max_steps_per_episode = 10000
 
 # Q-Learning Algorithm
 for episode in range(total_episodes):
-    state = env.reset()
+    state = env.reset()[0]
     done = False
     step = 0
+
     while step < max_steps_per_episode and not done:
         # Exploration-Exploitation Trade-Off
         exploration_rate_threshold = np.random.uniform(0, 1)
@@ -35,7 +38,9 @@ for episode in range(total_episodes):
             action = env.action_space.sample()
 
         # Take action
-        new_state, reward, done, info = env.step(action)
+        # observation, reward, terminated, truncated, info = env.step(action)
+
+        new_state, reward, done, _, info = env.step(action)
 
         # Update Q-Table
         q_table[state, action] = q_table[state, action] + learning_rate * \
